@@ -19,7 +19,7 @@ tiles is configured by how many Tiles per Dagree you used in EarthTiles
 mapsLink (true or false) will send a Google Maps link to the provided IRL location
 
 
-#Common Scales for Configuration Options
+# Common Scales for Configuration Options
 1:543 would be "scale: 3072, tiles: 15"
 
 1:326 would be "scale: 5120, tiles: 15"
