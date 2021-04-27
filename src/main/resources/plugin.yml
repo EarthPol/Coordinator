@@ -1,0 +1,14 @@
+name: Coordinator
+version: ${project.version}
+main: com.earthpol.coordinator.Main
+api-version: 1.16
+authors: [ 0xBit ]
+description: Converts IRL decimal degree coordinates to ingame coordinates and vice versa
+website: https://earthpol.github.com
+commands:
+  coordinate:
+    description: Gives the user a coordinate in game compared to an IRL coordinate
+  getlocation:
+    description: Gives the user a coordinate IRL relative to their ingame location.
+  coordinator:
+    description: Base command for coordinator.
