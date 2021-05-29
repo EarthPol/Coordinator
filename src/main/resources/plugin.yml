@@ -10,5 +10,6 @@ commands:
     description: Gives the user a coordinate in game compared to an IRL coordinate
   getlocation:
     description: Gives the user a coordinate IRL relative to their ingame location.
+    alias: getloc
   coordinator:
     description: Base command for coordinator.
