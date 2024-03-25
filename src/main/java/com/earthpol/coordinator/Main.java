@@ -12,32 +12,32 @@ import java.util.logging.Logger;
 public final class Main extends JavaPlugin {
     public static Main instance;
     public static Logger log = Bukkit.getLogger();
-    public static String prefix = "§e[COORDINATOR]:§a ";
+    public static String prefix = "§e[§6COORDINATOR§e]:§a ";
 
     @Override
     public void onEnable() {
         instance = this;
-        log.info("§e========= §bCOORDINATOR §e=========");
-        log.info("§e= §bVersion: §3" + this.getDescription().getVersion());
-        log.info("§e= §bAuthors: §3" + this.getDescription().getAuthors());
-        log.info("§e= §bWebsite: §3" + this.getDescription().getWebsite());
-        log.info("§e= §bSupport: §3https://discord.gg/DvtZzztAfF");
-        log.info("§e=========================");
-        log.info("§e= §bRegistering Configuration");
+        log.info("========= COORDINATOR =========");
+        log.info("= Version: " + this.getDescription().getVersion());
+        log.info("= Authors: " + this.getDescription().getAuthors());
+        log.info("= Website: " + this.getDescription().getWebsite());
+        log.info("= Support: https://discord.gg/epmc");
+        log.info("=========================");
+        log.info("= Registering Configuration");
 
         instance.getConfig().options().copyDefaults();
         instance.saveDefaultConfig();
 
-        log.info("§e= §aRegistered Configuration");
-        log.info("§e=========================");
-        log.info("§e= §bRegistering Commands");
+        log.info("= Registered Configuration");
+        log.info("=========================");
+        log.info("= Registering Commands");
         Objects.requireNonNull(getCommand("coordinate")).setExecutor(new Coordinate());
         Objects.requireNonNull(getCommand("getlocation")).setExecutor(new GetLocation());
         Objects.requireNonNull(getCommand("coordinator")).setExecutor(new Coordinator());
-        log.info("§e= §aRegistered Commands");
-        log.info("§e=========================");
-        log.info("§e= §aStartup completed.");
-        log.info("§e=========================");
+        log.info("= Registered Commands");
+        log.info("=========================");
+        log.info("= Startup completed.");
+        log.info("=========================");
     }
 
 
@@ -49,7 +49,7 @@ public final class Main extends JavaPlugin {
         log.info("§e========= §bCOORDINATOR §e=========");
         log.info("§e= §bDisabling plugin...");
         log.info("§e= §bThank you for using Coordinator");
-        log.info("§e= §bSupport: §3https://discord.gg/DvtZzztAfF");
+        log.info("§e= §bSupport: §3https://discord.gg/epmc");
         log.info("§e=========================");
     }
 }
