@@ -1,5 +1,5 @@
 # Coordinator
-Accurately get the real life coordinates from ingame, or get ingame coordinates from real life ones.
+Accurately get the real life coordinates from ingame, or get ingame coordinates from real life ones. Now supports Folia!
 
 
 ## COORDINATOR by 0xBit for EarthPol
