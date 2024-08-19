@@ -23,8 +23,11 @@ public class Coordinate implements CommandExecutor {
             double lat, lng;
             if (args.length > 1) {
                 try {
-                    lat = Double.parseDouble(args[0]);
-                    lng = Double.parseDouble(args[1]);
+                    String latInput = args[0].replaceAll("[^\\d.-]", "");
+                    String lngInput = args[1].replaceAll("[^\\d.-]", "");
+
+                    lat = Double.parseDouble(latInput);
+                    lng = Double.parseDouble(lngInput);
                 } catch (NumberFormatException e) {
                     player.sendMessage(ChatColor.RED + "Latitude and Longtitude should be a number.");
                     return false;
@@ -37,7 +40,7 @@ public class Coordinate implements CommandExecutor {
                 if (player.hasPermission("coordinator.teleport") || player.hasPermission("coordinator.admin")) {
                     TextComponent teleportTo = new TextComponent("§b[Teleport to Location]!");
                     teleportTo.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aTeleports you to X: " + x + ", Y: 255, Z: " + z).create()));
-                    teleportTo.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/minecraft:tp " + player.getName() + " " + x + " 255 " + z));
+                    teleportTo.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tp " + player.getName() + " " + x + " 255 " + z));
                     player.sendMessage(teleportTo);
                 }
                 if (player.hasPermission("coordinator.admin")) {
