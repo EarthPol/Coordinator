@@ -1,70 +1,83 @@
 # Coordinator
 
-Coordinator is a lightweight Paper/Spigot plugin that converts between **Minecraft X/Z** coordinates and **real-world decimal latitude/longitude** for Earth-style maps (Mercator-projection style), using two config values: `scale` and `tiles`.
+Coordinator is a lightweight **Paper / Spigot** plugin that converts between **Minecraft X/Z coordinates** and **real-world latitude/longitude** for Earth-style maps.
 
-It provides:
-- **`/getlocation`** → Minecraft ➜ IRL (Lat/Long), optionally with a clickable Google Maps link
-- **`/coordinate <lat> <lng>`** → IRL (Lat/Long) ➜ Minecraft X/Z, optionally with a clickable teleport prompt
-- **`/coordinator ...`** → admin utilities (reload config, set scale/tiles)
-
-This README matches how the plugin currently behaves and aligns with the EarthMC documentation for the same formulas and command behavior.
+It is designed for Earth servers (EarthPol / EarthMC-style projections) and uses a configurable scale system to map in-game positions to real-world locations.
 
 ---
 
-## How it works
+## Features
 
-Coordinator uses a simple math conversion based on your map’s *scale* and *degrees-per-tile* (your `tiles` value).
+- Convert **Minecraft → IRL coordinates**
+- Convert **IRL coordinates → Minecraft**
+- Optional **clickable Google Maps link**
+- Optional **click-to-teleport**
+- Fully configurable scale values
+- Live config reload
+- Minimal overhead, command-only plugin
 
-### Minecraft ➜ IRL (used by `/getlocation`)
+---
+
+## How It Works
+
+Coordinator uses two configuration values:
+
+- **scale** – blocks per tile
+- **tiles** – degrees per tile
+
+These values define how Minecraft coordinates map to latitude and longitude.
+
+---
+
+### Minecraft → IRL ( `/getlocation` )
 
 Given player location `(x, z)`:
 
-'''
+```
 lat = -1 * ((z / scale) * tiles)
 lng = (x / scale) * tiles
-'''
+```
 
-### IRL ➜ Minecraft (used by `/coordinate <lat> <lng>`)
+---
 
-Given decimal degrees `(lat, lng)`:
+### IRL → Minecraft ( `/coordinate <lat> <lng>` )
 
-'''
+Given decimal latitude and longitude:
+
+```
 x = round(lng * scale / tiles)
 z = -1 * round(lat * scale / tiles)
-'''
+```
 
 ---
 
 ## Installation
 
-1. Build or download the plugin jar.
-2. Drop the jar into your server’s `plugins/` folder.
-3. Start the server once to generate the default config.
-4. Configure `scale`, `tiles`, and `mapsLink` in `plugins/Coordinator/config.yml`.
-5. Restart the server or run `/coordinator reload`.
+1. Download or build the plugin JAR
+2. Place it in your server’s `plugins/` folder
+3. Start the server once to generate the config
+4. Edit `plugins/Coordinator/config.yml`
+5. Restart or run `/coordinator reload`
 
 ---
 
-## Configuration (`config.yml`)
+## Configuration
 
-Default example:
+**`config.yml`**
 
-'''
+```
 scale: 3072
 tiles: 15
 mapsLink: true
-'''
+```
 
 ### Options
 
-- **`scale`**  
-  Controls the conversion ratio between Minecraft blocks and map tiles.
-
-- **`tiles`**  
-  Degrees-per-tile factor used in coordinate math.
-
-- **`mapsLink`**  
-  When enabled, `/getlocation` shows a clickable Google Maps link.
+| Key | Description |
+|---|---|
+| `scale` | Controls conversion ratio between blocks and tiles |
+| `tiles` | Degrees per tile |
+| `mapsLink` | Enables clickable Google Maps link |
 
 ---
 
@@ -74,29 +87,26 @@ mapsLink: true
 **Player-only**
 
 Displays:
-- Current X / Y / Z
-- Converted IRL latitude and longitude
-- Clickable Google Maps link (if enabled)
+- X / Y / Z
+- IRL Latitude & Longitude
+- Google Maps link (if enabled)
 
-If the player has `coordinator.admin`, scale and tile values are also shown.
+Admins also see scale and tile values.
 
 ---
 
 ### `/coordinate <latitude> <longitude>`
 **Player-only**
 
-- Converts decimal latitude/longitude to Minecraft X/Z
+- Converts IRL coordinates to Minecraft X/Z
 - Accepts decimal degrees
-- Outputs calculated X and Z
-- If the player has `coordinator.teleport` or `coordinator.admin`, a clickable teleport prompt appears
+- Shows teleport button if permitted
 
-Teleport command used internally:
+Teleport command used:
 
-'''
+```
 /tp <player> <x> 255 <z>
-'''
-
-Admins additionally see scale and tile values.
+```
 
 ---
 
@@ -105,60 +115,59 @@ Admins additionally see scale and tile values.
 Administrative root command.
 
 #### `/coordinator reload`
-Reloads `config.yml`.
-
-- Requires `coordinator.admin` (players)
-- Console always allowed
+Reloads `config.yml`
 
 #### `/coordinator set scale <number>`
-Sets the scale value, saves, and reloads config.
+Updates scale value
 
 #### `/coordinator set tiles <number>`
-Sets the tiles value, saves, and reloads config.
+Updates tile value
 
 ---
 
 ## Permissions
 
-- **`coordinator.admin`**
-  - Reload config
-  - Set scale and tiles
-  - View debug scale/tile info
-
-- **`coordinator.teleport`**
-  - Enables teleport option in `/coordinate`
+| Permission | Description |
+|---|---|
+| `coordinator.admin` | Full access, config editing, debug output |
+| `coordinator.teleport` | Allows teleport prompt in `/coordinate` |
 
 ---
 
-## Behavior notes
+## Behavior Notes
 
 - `/getlocation` and `/coordinate` are **player-only**
 - Google Maps links use:
-  '''
+  ```
   https://www.google.com/maps/@<lat>,<lng>,18z
-  '''
-- All commands currently return `false`, which may trigger Bukkit usage messages depending on `plugin.yml`
-- Console `set` commands use JVM property lookup (`Integer.getInteger`) rather than parsing; player commands use proper parsing
+  ```
+- Console can reload and set config values
+- Commands intentionally lightweight and synchronous
 
 ---
 
-## Example usage
+## Example Usage
 
-### Convert your in-game location to IRL coordinates
-'''
+Convert your current position to IRL coordinates:
+
+```
 /getlocation
-'''
+```
 
-### Convert Google Maps coordinates to Minecraft
-'''
+Convert Google Maps coordinates to Minecraft:
+
+```
 /coordinate 47.6062 -122.3321
-'''
+```
 
 ---
 
 ## Support
 
 - Discord: https://discord.gg/epmc
+- Author: **0xBit**
+- Used on: **EarthPol**
+
 
 # Licensing 
 Coordinator is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (CC BY-NC-ND 3.0) License (http://creativecommons.org/licenses/by-nc-nd/3.0/)
