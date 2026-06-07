@@ -1,16 +1,16 @@
 name: Coordinator
-version: ${project.version}
+version: '${version}'
 main: com.earthpol.coordinator.Main
 api-version: 1.16
 folia-supported: true
 authors: [ 0xBit ]
-description: Converts IRL decimal degree coordinates to ingame coordinates and vice versa
+description: Converts real world decimal degree coordinates to ingame coordinates and vice versa
 website: https://earthpol.github.com
 commands:
   coordinate:
-    description: Gives the user a coordinate in game compared to an IRL coordinate
+    description: Returns coordinates in game from real world coordinates
   getlocation:
-    description: Gives the user a coordinate IRL relative to their ingame location.
+    description: Returns real world coordinates relative to their ingame location
     alias: getloc
   coordinator:
-    description: Base command for coordinator.
+    description: Base command for Coordinator

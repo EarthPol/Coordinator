@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 public final class Main extends JavaPlugin {
     public static Main instance;
     public static Logger log = Bukkit.getLogger();
-    public static String prefix = "§e[§6COORDINATOR§e]:§a ";
 
     @Override
     public void onEnable() {
@@ -25,8 +24,7 @@ public final class Main extends JavaPlugin {
         log.info("=========================");
         log.info("= Registering Configuration");
 
-        instance.getConfig().options().copyDefaults();
-        instance.saveDefaultConfig();
+        Config.initialize();
 
         log.info("= Registered Configuration");
         log.info("=========================");
@@ -40,16 +38,7 @@ public final class Main extends JavaPlugin {
         log.info("=========================");
     }
 
-
-
-
     @Override
-    public void onDisable() {
-        instance.saveConfig();
-        log.info("§e========= §bCOORDINATOR §e=========");
-        log.info("§e= §bDisabling plugin...");
-        log.info("§e= §bThank you for using Coordinator");
-        log.info("§e= §bSupport: §3https://discord.gg/epmc");
-        log.info("§e=========================");
-    }
+    public void onDisable() {}
+
 }

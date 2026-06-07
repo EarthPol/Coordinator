@@ -1,6 +1,8 @@
 package com.earthpol.coordinator.commands;
 
+import com.earthpol.coordinator.Config;
 import com.earthpol.coordinator.Main;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -15,45 +17,59 @@ import org.jetbrains.annotations.NotNull;
 
 public class Coordinate implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            int scale = Main.instance.getConfig().getInt("scale"), tiles = Main.instance.getConfig().getInt("tiles"), x, z;
-
-            double lat, lng;
-            if (args.length > 1) {
-                try {
-                    String latInput = args[0].replaceAll("[^\\d.-]", "");
-                    String lngInput = args[1].replaceAll("[^\\d.-]", "");
-
-                    lat = Double.parseDouble(latInput);
-                    lng = Double.parseDouble(lngInput);
-                } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Latitude and Longtitude should be a number.");
-                    return false;
-                }
-                x = (int) Math.round(lng * scale / tiles);
-                z = (int) (-1 * Math.round(lat * scale / tiles));
-
-                player.sendMessage(ChatColor.YELLOW + "========= In-game Coordinates =========");
-                player.sendMessage(ChatColor.YELLOW + "X: " + ChatColor.AQUA + x + ChatColor.YELLOW + " Z: " + ChatColor.AQUA + z);
-                if (player.hasPermission("coordinator.teleport") || player.hasPermission("coordinator.admin")) {
-                    TextComponent teleportTo = new TextComponent("§b[Teleport to Location]!");
-                    teleportTo.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aTeleports you to X: " + x + ", Y: 255, Z: " + z).create()));
-                    teleportTo.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tp " + player.getName() + " " + x + " 255 " + z));
-                    player.sendMessage(teleportTo);
-                }
-                if (player.hasPermission("coordinator.admin")) {
-                    player.sendMessage(ChatColor.YELLOW + "Scale: " + ChatColor.AQUA + scale + ChatColor.YELLOW + " Dagrees per Tile: " + ChatColor.AQUA + tiles);
-                }
-                player.sendMessage(ChatColor.YELLOW + "======================================");
-            } else {
-                player.sendMessage("§eIncorrect Usage: Please specific §blatitude §eand §blongitude §ein §bdecimal degrees");
-                player.sendMessage("§eCorrect Usage: [§c/coordinate <latitude> <longitude>§e]");
-            }
-        } else {
-            Bukkit.getLogger().info(Main.prefix + "You need to be a player to execute this command.");
+    public boolean onCommand(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
+            @NotNull String @NotNull [] args
+    ) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(
+                    Config.getConfig().getString("message.error.mustbeplayer", "")
+            ));
+            return true;
         }
+
+		if (args.length < 2) {
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(
+                    Config.getConfig().getString("message.error.incorrectusage", "")
+            ));
+            return true;
+        }
+
+
+        int scale = Config.getConfig().getInt("scale");
+        int tiles = Config.getConfig().getInt("tiles");
+
+        int x, z;
+        double lat, lng;
+
+
+        try {
+            String latInput = args[0].replaceAll("[^\\d.-]", "");
+            String lngInput = args[1].replaceAll("[^\\d.-]", "");
+
+            lat = Double.parseDouble(latInput);
+            lng = Double.parseDouble(lngInput);
+        } catch (NumberFormatException e) {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(
+                    Config.getConfig().getString("message.error.latlongnumber", "")
+            ));
+            return false;
+        }
+
+        x = (int) Math.round(lng * scale / tiles);
+        z = (int) (-1 * Math.round(lat * scale / tiles));
+
+        String message = Main.instance.getConfig().getString("message.coordinate.default", "");
+        if (player.hasPermission("coordinator.admin")) message += Config.getConfig().getString("message.coordinate.admin", "");
+
+        message = message.replace("{x}", String.valueOf(x))
+                .replace("{z}", String.valueOf(z));
+
+        for (String msg : message.split("\n"))
+            player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+
 
         return false;
     }
